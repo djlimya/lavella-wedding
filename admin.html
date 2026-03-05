@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LaVella 관리자</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Noto+Serif+KR:wght@300;400;500&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <style>
+        :root {
+            --gold: #C9A96E;
+            --dark-gold: #A68A5C;
+            --cream: #FAF8F3;
+            --light-gold: #F5EFE0;
+            --charcoal: #2C2C2C;
+            --soft-gray: #E8E6E1;
+            --white: #FFFFFF;
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family:'Noto Serif KR',serif; background:var(--cream); color:var(--charcoal); min-height:100vh; }
+
+        /* LOGIN */
+        #loginScreen {
+            position:fixed; inset:0;
+            background:linear-gradient(135deg, var(--charcoal) 0%, #1a1a1a 100%);
+            display:flex; align-items:center; justify-content:center; z-index:9999;
+        }
+        .login-box {
+            background:var(--white); padding:3rem; width:360px;
+            text-align:center; box-shadow:0 20px 60px rgba(0,0,0,0.4);
+        }
+        .login-box h1 { font-family:'Playfair Display',serif; color:var(--gold); font-size:2rem; margin-bottom:0.5rem; }
+        .login-box p { color:#888; font-size:0.9rem; margin-bottom:2rem; }
+        .login-box input {
+            width:100%; padding:1rem; border:1px solid var(--soft-gray);
+            background:var(--cream); font-family:'Noto Serif KR',serif;
+            font-size:1rem; margin-bottom:1rem; text-align:center;
+            letter-spacing:3px;
+        }
+        .login-box input:focus { outline:none; border-color:var(--gold); }
+        .login-btn {
+            width:100%; padding:1rem; background:var(--gold); color:white;
+            border:none; font-size:1rem; cursor:pointer; letter-spacing:2px;
+            font-family:'Noto Serif KR',serif; transition:background 0.3s;
+        }
+        .login-btn:hover { background:var(--dark-gold); }
+        .login-error { color:#e74c3c; font-size:0.9rem; margin-top:1rem; display:none; }
+
+        /* MAIN */
+        #mainScreen { display:none; }
+        header {
+            background:var(--charcoal); padding:1.2rem 2rem;
+            display:flex; justify-content:space-between; align-items:center;
+            position:sticky; top:0; z-index:100;
+        }
+        header h1 { font-family:'Playfair Display',serif; color:var(--gold); font-size:1.5rem; }
+        .header-right { display:flex; gap:1rem; align-items:center; }
+        .logout-btn {
+            padding:0.5rem 1.2rem; background:transparent; border:1px solid #666;
+            color:#ccc; cursor:pointer; font-size:0.85rem; transition:all 0.3s;
+        }
+        .logout-btn:hover { border-color:var(--gold); color:var(--gold); }
+
+        .container { max-width:1200px; margin:0 auto; padding:2rem; }
+
+        /* TABS */
+        .tabs { display:flex; gap:0; margin-bottom:2rem; border-bottom:2px solid var(--soft-gray); }
+        .tab-btn {
+            padding:1rem 2rem; background:transparent; border:none;
+            font-family:'Noto Serif KR',serif; font-size:1rem; cursor:pointer;
+            color:#888; transition:all 0.3s; border-bottom:3px solid transparent;
+            margin-bottom:-2px;
+        }
+        .tab-btn.active { color:var(--gold); border-bottom-color:var(--gold); font-weight:500; }
+        .tab-btn:hover { color:var(--gold); }
+
+        /* STATS */
+        .stats-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem; margin-bottom:2rem; }
+        .stat-card { background:var(--white); padding:1.5rem; border:1px solid var(--soft-gray); text-align:center; }
+        .stat-card h3 { font-size:2.5rem; color:var(--gold); font-family:'Playfair Display',serif; }
+        .stat-card p { color:#888; font-size:0.9rem; margin-top:0.5rem; }
+
+        /* TABLE */
+        .table-header {
+            display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;
+        }
+        .table-header h2 { font-family:'Playfair Display',serif; color:var(--gold); font-size:1.5rem; }
+        .refresh-btn {
+            padding:0.5rem 1.2rem; background:var(--gold); color:white;
+            border:none; cursor:pointer; font-size:0.9rem; transition:background 0.3s;
+        }
+        .refresh-btn:hover { background:var(--dark-gold); }
+
+        table { width:100%; border-collapse:collapse; background:var(--white); }
+        thead { background:var(--gold); color:white; }
+        th { padding:1rem; text-align:left; font-size:0.9rem; font-weight:500; }
+        td { padding:0.9rem 1rem; border-bottom:1px solid var(--soft-gray); font-size:0.9rem; vertical-align:top; }
+        tr:hover td { background:var(--light-gold); }
+        .empty-row td { text-align:center; color:#888; padding:3rem; }
+
+        /* BADGE */
+        .badge {
+            display:inline-block; padding:0.2rem 0.6rem; font-size:0.75rem;
+            border-radius:3px; font-weight:500;
+        }
+        .badge-pending { background:#fff3cd; color:#856404; }
+        .badge-confirmed { background:#d4edda; color:#155724; }
+
+        /* ACTION BUTTONS */
+        .action-btns { display:flex; gap:0.5rem; flex-wrap:wrap; }
+        .btn-pdf {
+            padding:0.4rem 0.8rem; background:var(--gold); color:white;
+            border:none; cursor:pointer; font-size:0.8rem; transition:background 0.3s;
+            white-space:nowrap;
+        }
+        .btn-pdf:hover { background:var(--dark-gold); }
+        .btn-delete {
+            padding:0.4rem 0.8rem; background:transparent; color:#e74c3c;
+            border:1px solid #e74c3c; cursor:pointer; font-size:0.8rem; transition:all 0.3s;
+        }
+        .btn-delete:hover { background:#e74c3c; color:white; }
+        .btn-confirm {
+            padding:0.4rem 0.8rem; background:transparent; color:#27ae60;
+            border:1px solid #27ae60; cursor:pointer; font-size:0.8rem; transition:all 0.3s;
+        }
+        .btn-confirm:hover { background:#27ae60; color:white; }
+
+        /* LOADING */
+        .loading { text-align:center; padding:3rem; color:#888; }
+        .loading-spinner {
+            display:inline-block; width:30px; height:30px;
+            border:3px solid var(--soft-gray); border-top-color:var(--gold);
+            border-radius:50%; animation:spin 0.8s linear infinite; margin-bottom:1rem;
+        }
+        @keyframes spin { to { transform:rotate(360deg); } }
+
+        /* BLOCKED DATES */
+        .dates-grid { display:grid; grid-template-columns:1fr 1fr; gap:2rem; }
+        .dates-card { background:var(--white); padding:2rem; border:1px solid var(--soft-gray); }
+        .dates-card h3 { font-family:'Playfair Display',serif; color:var(--gold); margin-bottom:1.5rem; }
+        .date-input-row { display:flex; gap:1rem; margin-bottom:1.5rem; }
+        .date-input-row input {
+            flex:1; padding:0.8rem; border:1px solid var(--soft-gray);
+            background:var(--cream); font-family:'Noto Serif KR',serif; font-size:1rem;
+        }
+        .date-input-row input:focus { outline:none; border-color:var(--gold); }
+        .add-date-btn {
+            padding:0.8rem 1.5rem; background:var(--gold); color:white;
+            border:none; cursor:pointer; font-size:0.9rem; white-space:nowrap;
+        }
+        .date-list { display:flex; flex-direction:column; gap:0.5rem; max-height:300px; overflow-y:auto; }
+        .date-item {
+            display:flex; justify-content:space-between; align-items:center;
+            padding:0.7rem 1rem; background:var(--cream); border:1px solid var(--soft-gray);
+        }
+        .date-item span { font-size:0.95rem; }
+        .date-item button {
+            background:none; border:none; color:#e74c3c; cursor:pointer; font-size:1.2rem; padding:0 0.3rem;
+        }
+        .no-dates { color:#888; text-align:center; padding:2rem; }
+
+        /* TOAST */
+        .toast {
+            position:fixed; bottom:2rem; right:2rem;
+            background:var(--charcoal); color:white; padding:1rem 1.5rem;
+            font-size:0.9rem; opacity:0; transition:opacity 0.3s; z-index:9999;
+            pointer-events:none;
+        }
+        .toast.show { opacity:1; }
+
+        @media (max-width:768px) {
+            .stats-grid { grid-template-columns:1fr; }
+            .dates-grid { grid-template-columns:1fr; }
+            table { font-size:0.8rem; }
+            th, td { padding:0.6rem; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginScreen">
+    <div class="login-box">
+        <h1>LaVella</h1>
+        <p>관리자 페이지</p>
+        <input type="password" id="pwInput" placeholder="비밀번호 입력" onkeydown="if(event.key==='Enter')doLogin()">
+        <button class="login-btn" onclick="doLogin()">로그인</button>
+        <p class="login-error" id="loginError">비밀번호가 틀렸습니다</p>
+    </div>
+</div>
+
+<!-- MAIN -->
+<div id="mainScreen">
+    <header>
+        <h1>LaVella 관리자</h1>
+        <div class="header-right">
+            <span id="headerStats" style="color:#aaa; font-size:0.85rem;"></span>
+            <button class="logout-btn" onclick="doLogout()">로그아웃</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- STATS -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3 id="statBookings">-</h3>
+                <p>총 예약 신청</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="statContracts">-</h3>
+                <p>총 계약서</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="statBlocked">-</h3>
+                <p>예약 불가 날짜</p>
+            </div>
+        </div>
+
+        <!-- TABS -->
+        <div class="tabs">
+            <button class="tab-btn active" onclick="showTab('bookings')">📋 예약 신청</button>
+            <button class="tab-btn" onclick="showTab('contracts')">📄 계약서</button>
+            <button class="tab-btn" onclick="showTab('dates')">📅 캘린더 관리</button>
+        </div>
+
+        <!-- BOOKINGS TAB -->
+        <div id="tab-bookings">
+            <div class="table-header">
+                <h2>예약 신청 목록</h2>
+                <button class="refresh-btn" onclick="loadBookings()">새로고침</button>
+            </div>
+            <div id="bookingsLoading" class="loading">
+                <div class="loading-spinner"></div><br>불러오는 중...
+            </div>
+            <div id="bookingsTable" style="display:none; overflow-x:auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>예식 날짜</th>
+                            <th>신랑/신부</th>
+                            <th>연락처</th>
+                            <th>예식장</th>
+                            <th>요청사항</th>
+                            <th>접수일</th>
+                            <th>관리</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bookingsTbody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- CONTRACTS TAB -->
+        <div id="tab-contracts" style="display:none;">
+            <div class="table-header">
+                <h2>계약서 목록</h2>
+                <button class="refresh-btn" onclick="loadContracts()">새로고침</button>
+            </div>
+            <div id="contractsLoading" class="loading">
+                <div class="loading-spinner"></div><br>불러오는 중...
+            </div>
+            <div id="contractsTable" style="display:none; overflow-x:auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>예식 날짜</th>
+                            <th>신랑/신부</th>
+                            <th>패키지</th>
+                            <th>총액</th>
+                            <th>SNS동의</th>
+                            <th>접수일</th>
+                            <th>관리</th>
+                        </tr>
+                    </thead>
+                    <tbody id="contractsTbody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- DATES TAB -->
+        <div id="tab-dates" style="display:none;">
+            <div class="dates-grid">
+                <div class="dates-card">
+                    <h3>📅 예약 불가 날짜 추가</h3>
+                    <div class="date-input-row">
+                        <input type="date" id="newBlockDate">
+                        <button class="add-date-btn" onclick="addBlockedDate()">추가</button>
+                    </div>
+                    <p style="font-size:0.85rem; color:#888;">추가하면 캘린더에 즉시 반영됩니다</p>
+                </div>
+                <div class="dates-card">
+                    <h3>🚫 등록된 예약 불가 날짜</h3>
+                    <div class="date-list" id="blockedDatesList">
+                        <div class="no-dates">불러오는 중...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+    // ============================================================
+    // FIREBASE
+    // ============================================================
+    const firebaseConfig = {
+        apiKey: "AIzaSyCAoBowyPJh8ax-vDy-vS5V2tsO4DIbg3w",
+        authDomain: "labella-wedding.firebaseapp.com",
+        projectId: "labella-wedding",
+        storageBucket: "labella-wedding.firebasestorage.app",
+        messagingSenderId: "490619262185",
+        appId: "1:490619262185:web:278f7b9cb7b524984ecc78"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    // ============================================================
+    // 비밀번호 (변경 가능)
+    // ============================================================
+    const ADMIN_PASSWORD = 'lavella2026';
+
+    // ============================================================
+    // LOGIN
+    // ============================================================
+    function doLogin() {
+        const pw = document.getElementById('pwInput').value;
+        if (pw === ADMIN_PASSWORD) {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('mainScreen').style.display = 'block';
+            loadAll();
+        } else {
+            document.getElementById('loginError').style.display = 'block';
+            document.getElementById('pwInput').value = '';
+        }
+    }
+
+    function doLogout() {
+        document.getElementById('loginScreen').style.display = 'flex';
+        document.getElementById('mainScreen').style.display = 'none';
+        document.getElementById('pwInput').value = '';
+    }
+
+    // ============================================================
+    // TABS
+    // ============================================================
+    function showTab(tab) {
+        ['bookings','contracts','dates'].forEach(t => {
+            document.getElementById('tab-'+t).style.display = t===tab ? 'block' : 'none';
+        });
+        document.querySelectorAll('.tab-btn').forEach((btn, i) => {
+            btn.classList.toggle('active', ['bookings','contracts','dates'][i] === tab);
+        });
+    }
+
+    // ============================================================
+    // TOAST
+    // ============================================================
+    function showToast(msg) {
+        const t = document.getElementById('toast');
+        t.textContent = msg;
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 2500);
+    }
+
+    // ============================================================
+    // LOAD ALL
+    // ============================================================
+    function loadAll() {
+        loadBookings();
+        loadContracts();
+        loadBlockedDates();
+    }
+
+    // ============================================================
+    // BOOKINGS
+    // ============================================================
+    function loadBookings() {
+        document.getElementById('bookingsLoading').style.display = 'block';
+        document.getElementById('bookingsTable').style.display = 'none';
+
+        db.collection('bookings').orderBy('createdAt', 'desc').get()
+            .then(snapshot => {
+                const tbody = document.getElementById('bookingsTbody');
+                tbody.innerHTML = '';
+                let count = 0;
+
+                if (snapshot.empty) {
+                    tbody.innerHTML = '<tr class="empty-row"><td colspan="7">예약 신청이 없습니다</td></tr>';
+                } else {
+                    snapshot.forEach(doc => {
+                        count++;
+                        const d = doc.data();
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td><strong>${d.date || '-'}</strong><br><span style="color:#888;font-size:0.8rem;">${d.weddingTime || ''}</span></td>
+                            <td>${d.groomName || '-'} ♥ ${d.brideName || '-'}</td>
+                            <td>${d.phone || '-'}<br><span style="color:#888;font-size:0.8rem;">${d.email || ''}</span></td>
+                            <td>${d.venue || '-'}</td>
+                            <td style="max-width:150px; font-size:0.85rem;">${d.message || '-'}</td>
+                            <td style="font-size:0.8rem;">${d.createdAt ? new Date(d.createdAt).toLocaleDateString('ko-KR') : '-'}</td>
+                            <td>
+                                <div class="action-btns">
+                                    <button class="btn-delete" onclick="deleteDoc('bookings','${doc.id}',this)">삭제</button>
+                                </div>
+                            </td>
+                        `;
+                        tbody.appendChild(row);
+                    });
+                }
+
+                document.getElementById('statBookings').textContent = count;
+                document.getElementById('bookingsLoading').style.display = 'none';
+                document.getElementById('bookingsTable').style.display = 'block';
+            })
+            .catch(err => {
+                console.error(err);
+                document.getElementById('bookingsLoading').innerHTML = '불러오기 실패. 보안 규칙을 확인해주세요.';
+            });
+    }
+
+    // ============================================================
+    // CONTRACTS
+    // ============================================================
+    function loadContracts() {
+        document.getElementById('contractsLoading').style.display = 'block';
+        document.getElementById('contractsTable').style.display = 'none';
+
+        db.collection('contracts').orderBy('createdAt', 'desc').get()
+            .then(snapshot => {
+                const tbody = document.getElementById('contractsTbody');
+                tbody.innerHTML = '';
+                let count = 0;
+
+                if (snapshot.empty) {
+                    tbody.innerHTML = '<tr class="empty-row"><td colspan="7">계약서가 없습니다</td></tr>';
+                } else {
+                    snapshot.forEach(doc => {
+                        count++;
+                        const d = doc.data();
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td><strong>${d.date || '-'}</strong><br><span style="color:#888;font-size:0.8rem;">${d.time || ''}</span></td>
+                            <td>${d.groomName || '-'} ♥ ${d.brideName || '-'}<br><span style="color:#888;font-size:0.8rem;">${d.phone || ''}</span></td>
+                            <td style="font-size:0.85rem;">${(d.package || '-').replace('Essentiel (에센셜) - 600,000원','에센셜').replace('Classique (클래식) - 850,000원','클래식').replace('Prestige (프레스티지) - 1,150,000원','프레스티지')}</td>
+                            <td><strong style="color:var(--gold);">${d.totalAmount || '-'}</strong><br><span style="color:#888;font-size:0.8rem;">계약금 ${d.deposit || '-'}</span></td>
+                            <td style="text-align:center;">${d.agreeSNS ? '✅' : '❌'}</td>
+                            <td style="font-size:0.8rem;">${d.createdAt ? new Date(d.createdAt).toLocaleDateString('ko-KR') : '-'}</td>
+                            <td>
+                                <div class="action-btns">
+                                    <button class="btn-pdf" onclick="downloadContractPDF('${doc.id}')">PDF</button>
+                                    <button class="btn-delete" onclick="deleteDoc('contracts','${doc.id}',this)">삭제</button>
+                                </div>
+                            </td>
+                        `;
+                        tbody.appendChild(row);
+                    });
+                }
+
+                document.getElementById('statContracts').textContent = count;
+                document.getElementById('contractsLoading').style.display = 'none';
+                document.getElementById('contractsTable').style.display = 'block';
+            })
+            .catch(err => {
+                console.error(err);
+                document.getElementById('contractsLoading').innerHTML = '불러오기 실패. 보안 규칙을 확인해주세요.';
+            });
+    }
+
+    // ============================================================
+    // DELETE
+    // ============================================================
+    function deleteDoc(collection, id, btn) {
+        if (!confirm('삭제하시겠습니까? 복구할 수 없습니다.')) return;
+        db.collection(collection).doc(id).delete()
+            .then(() => {
+                btn.closest('tr').remove();
+                showToast('삭제되었습니다');
+            })
+            .catch(err => { console.error(err); showToast('삭제 실패'); });
+    }
+
+    // ============================================================
+    // CONTRACT PDF DOWNLOAD
+    // ============================================================
+    function downloadContractPDF(docId) {
+        db.collection('contracts').doc(docId).get()
+            .then(doc => {
+                if (!doc.exists) { showToast('데이터를 찾을 수 없습니다'); return; }
+                const d = doc.data();
+                generatePDF(d);
+                showToast('PDF 다운로드 시작!');
+            })
+            .catch(err => { console.error(err); showToast('PDF 생성 실패'); });
+    }
+
+    function generatePDF(d) {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF({ orientation:'portrait', unit:'mm', format:'a4' });
+        const pageW=210, margin=15, contentW=pageW-margin*2;
+        let y=15;
+
+        function checkPage() { if(y>270){doc.addPage();y=15;} }
+
+        function drawHeader(text) {
+            doc.setFillColor(201,169,110);
+            doc.rect(margin,y,contentW,7,'F');
+            doc.setTextColor(255,255,255);
+            doc.setFontSize(10); doc.setFont('helvetica','bold');
+            doc.text(text,margin+2,y+5);
+            doc.setTextColor(44,44,44);
+            y+=9;
+        }
+
+        function drawRow(label,value,shade) {
+            checkPage();
+            doc.setFillColor(shade?250:255, shade?248:255, shade?243:255);
+            doc.rect(margin,y,contentW,7,'F');
+            doc.setFontSize(9); doc.setFont('helvetica','bold');
+            doc.text(label,margin+2,y+5);
+            doc.setFont('helvetica','normal');
+            const v=String(value||'-');
+            doc.text(v.length>55?v.substring(0,55)+'...':v, margin+50,y+5);
+            doc.setDrawColor(232,230,225);
+            doc.line(margin,y+7,margin+contentW,y+7);
+            y+=8;
+        }
+
+        // 타이틀
+        doc.setFontSize(20); doc.setFont('helvetica','bold');
+        doc.setTextColor(201,169,110);
+        doc.text('LaVella Wedding', pageW/2,y+5,{align:'center'});
+        y+=10;
+        doc.setFontSize(13); doc.setTextColor(44,44,44);
+        doc.text('Wedding Photography Contract',pageW/2,y+5,{align:'center'});
+        y+=8;
+        doc.setFontSize(8); doc.setTextColor(150,150,150);
+        const createdStr = d.createdAt ? new Date(d.createdAt).toLocaleString('ko-KR') : '-';
+        doc.text('작성일: '+createdStr, pageW/2,y+4,{align:'center'});
+        y+=10;
+        doc.setDrawColor(201,169,110); doc.setLineWidth(0.5);
+        doc.line(margin,y,margin+contentW,y);
+        y+=8;
+
+        drawHeader('고객 정보');
+        drawRow('신랑', d.groomName, true);
+        drawRow('신부', d.brideName, false);
+        drawRow('연락처', d.phone, true);
+        drawRow('이메일', d.email, false);
+        if(d.address && d.address!=='-') drawRow('배송 주소', d.address, true);
+        y+=4;
+
+        drawHeader('예식 정보');
+        drawRow('예식 날짜', d.date, true);
+        drawRow('예식 시간', d.time, false);
+        drawRow('예식장', d.venueName, true);
+        drawRow('예식장 주소', d.venueAddress, false);
+        y+=4;
+
+        drawHeader('촬영 패키지');
+        drawRow('선택 패키지', d.package, true);
+        drawRow('총 계약금액', d.totalAmount, false);
+        drawRow('계약금', d.deposit||'200,000원', true);
+        drawRow('잔금', d.remaining, false);
+        y+=4;
+
+        drawHeader('동의 사항');
+        drawRow('SNS 홍보 동의', d.agreeSNS?'동의':'미동의', true);
+        y+=8;
+
+        doc.setFillColor(245,239,224);
+        doc.rect(margin,y,contentW,16,'F');
+        doc.setFontSize(8); doc.setFont('helvetica','normal'); doc.setTextColor(100,100,100);
+        doc.text('카카오뱅크 3333-34-8554081 (예금주: 임준혁)', margin+3,y+6);
+        doc.text('계약금 200,000원 입금 후 예약 확정', margin+3,y+12);
+
+        const filename = 'lavella_' + (d.groomName||'') + '_' + (d.brideName||'') + '_' + (d.date||'') + '.pdf';
+        doc.save(filename);
+    }
+
+    // ============================================================
+    // BLOCKED DATES
+    // ============================================================
+    let blockedDatesData = [];
+
+    function loadBlockedDates() {
+        db.collection('blockedDates').orderBy('date').get()
+            .then(snapshot => {
+                blockedDatesData = [];
+                snapshot.forEach(doc => {
+                    blockedDatesData.push({ id: doc.id, date: doc.data().date });
+                });
+                renderBlockedDates();
+                document.getElementById('statBlocked').textContent = blockedDatesData.length;
+            })
+            .catch(err => {
+                // orderBy 실패 시 그냥 get
+                db.collection('blockedDates').get().then(snapshot => {
+                    blockedDatesData = [];
+                    snapshot.forEach(doc => {
+                        blockedDatesData.push({ id: doc.id, date: doc.data().date });
+                    });
+                    blockedDatesData.sort((a,b) => a.date.localeCompare(b.date));
+                    renderBlockedDates();
+                    document.getElementById('statBlocked').textContent = blockedDatesData.length;
+                });
+            });
+    }
+
+    function renderBlockedDates() {
+        const list = document.getElementById('blockedDatesList');
+        if (blockedDatesData.length === 0) {
+            list.innerHTML = '<div class="no-dates">등록된 날짜가 없습니다</div>';
+            return;
+        }
+        list.innerHTML = blockedDatesData.map(item => `
+            <div class="date-item">
+                <span>📅 ${item.date}</span>
+                <button onclick="removeBlockedDate('${item.id}')" title="삭제">✕</button>
+            </div>
+        `).join('');
+    }
+
+    function addBlockedDate() {
+        const input = document.getElementById('newBlockDate');
+        const date = input.value;
+        if (!date) { showToast('날짜를 선택해주세요'); return; }
+        if (blockedDatesData.some(d => d.date === date)) { showToast('이미 등록된 날짜입니다'); return; }
+
+        db.collection('blockedDates').add({ date: date })
+            .then(() => {
+                input.value = '';
+                loadBlockedDates();
+                showToast(date + ' 추가되었습니다');
+            })
+            .catch(err => { console.error(err); showToast('추가 실패 - 보안 규칙 확인 필요'); });
+    }
+
+    function removeBlockedDate(id) {
+        db.collection('blockedDates').doc(id).delete()
+            .then(() => {
+                loadBlockedDates();
+                showToast('삭제되었습니다');
+            })
+            .catch(err => { console.error(err); showToast('삭제 실패'); });
+    }
+</script>
+</body>
+</html>
