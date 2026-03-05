@@ -594,26 +594,20 @@
             .then(function(doc) {
                 if (!doc.exists) { showToast('데이터를 찾을 수 없습니다'); return; }
                 var d = doc.data();
-                var w = window.open('', '_blank', 'width=800,height=900');
-                w.document.write(
-                    '<!DOCTYPE html><html><head><meta charset="UTF-8">'
-                    + '<title>LaVella 계약서 - ' + (d.groomName||'') + ' \u2665 ' + (d.brideName||'') + '</title>'
-                    + '<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Noto+Serif+KR:wght@300;400;500;600&display=swap" rel="stylesheet">'
-                    + '<style>'
-                    + 'body{font-family:"Noto Serif KR",serif;background:white;margin:0;padding:2rem;}'
-                    + '@media print{@page{margin:15mm;}.no-print{display:none!important;}'
-                    + '*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}}'
-                    + '.no-print{text-align:center;margin-bottom:2rem;}'
-                    + '.print-btn{padding:1rem 3rem;background:#C9A96E;color:white;border:none;font-size:1rem;cursor:pointer;letter-spacing:2px;font-family:"Noto Serif KR",serif;}'
-                    + '</style></head><body>'
-                    + '<div class="no-print"><button class="print-btn" onclick="window.print()">PDF로 저장 / 인쇄</button>'
-                    + '<p style="color:#888;font-size:0.85rem;margin-top:0.5rem;">Chrome: 인쇄 창 \u2192 대상: PDF로 저장</p></div>'
-                    + buildContractHTML(d)
-                    + '</body></html>'
-                );
-                w.document.close();
+                // 팝업 없이 현재 페이지에 인쇄 오버레이 방식
+                var overlay = document.getElementById('printOverlay');
+                document.getElementById('printContent').innerHTML = buildContractHTML(d);
+                overlay.style.display = 'flex';
             })
             .catch(function(err) { console.error(err); showToast('불러오기 실패'); });
+    }
+
+    function closePrintOverlay() {
+        document.getElementById('printOverlay').style.display = 'none';
+    }
+
+    function doPrint() {
+        window.print();
     }
 
     // ============================================================
@@ -668,5 +662,35 @@
             .catch(function(err) { console.error(err); showToast('삭제 실패'); });
     }
 </script>
+
+    <!-- 인쇄 오버레이 -->
+    <div id="printOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:99999;align-items:center;justify-content:center;">
+        <div style="background:white;width:90%;max-width:780px;max-height:90vh;overflow-y:auto;border-radius:4px;">
+            <div style="background:#C9A96E;padding:1.2rem 2rem;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:1;" class="no-print-overlay">
+                <span style="color:white;font-family:'Playfair Display',serif;font-size:1.2rem;">계약서 미리보기</span>
+                <div style="display:flex;gap:1rem;">
+                    <button onclick="doPrint()" style="padding:0.6rem 1.5rem;background:white;color:#C9A96E;border:none;cursor:pointer;font-family:'Noto Serif KR',serif;font-size:0.95rem;font-weight:bold;">PDF로 저장 / 인쇄</button>
+                    <button onclick="closePrintOverlay()" style="padding:0.6rem 1.2rem;background:transparent;color:white;border:1px solid white;cursor:pointer;font-size:0.95rem;">닫기</button>
+                </div>
+            </div>
+            <div id="printContent" style="padding:2rem;"></div>
+        </div>
+    </div>
+
+    <!-- 인쇄 전용 CSS -->
+    <style>
+        @media print {
+            body > *:not(#printOverlay) { display: none !important; }
+            #printOverlay {
+                display: block !important;
+                position: static !important;
+                background: white !important;
+            }
+            .no-print-overlay { display: none !important; }
+            #printContent { padding: 0 !important; }
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+        }
+    </style>
+
 </body>
 </html>
