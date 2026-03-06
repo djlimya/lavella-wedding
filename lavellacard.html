@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>임준혁 · LaVella Wedding</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Noto+Serif+KR:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #FAF7F2;
+    --cream2: #F2EDE4;
+    --gold: #C9A96E;
+    --gold-light: #E8D4A8;
+    --gold-dark: #A07840;
+    --dark: #2C2522;
+    --gray: #8A8278;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--cream);
+    font-family: 'Noto Serif KR', serif;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+  }
+
+  /* 배경 패턴 */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      radial-gradient(circle at 20% 20%, rgba(201,169,110,0.08) 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(201,169,110,0.08) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  .card {
+    width: 100%;
+    max-width: 420px;
+    background: #fff;
+    border: 1px solid var(--gold-light);
+    box-shadow: 0 8px 60px rgba(160,120,64,0.12), 0 2px 12px rgba(160,120,64,0.08);
+    opacity: 0;
+    transform: translateY(24px);
+    animation: fadeUp 0.8s ease forwards;
+  }
+
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* 상단 헤더 */
+  .card-header {
+    background: var(--dark);
+    padding: 2.8rem 2.5rem 2.2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card-header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+
+  .card-header::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+
+  /* 배경 장식 원 */
+  .card-header .deco {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid rgba(201,169,110,0.15);
+  }
+  .deco-1 { width: 200px; height: 200px; top: -80px; left: -60px; }
+  .deco-2 { width: 150px; height: 150px; bottom: -60px; right: -40px; }
+
+  .brand-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    color: var(--gold);
+    letter-spacing: 2px;
+    margin-bottom: 0.3rem;
+    position: relative;
+  }
+
+  .brand-sub {
+    font-size: 0.7rem;
+    color: rgba(201,169,110,0.6);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-bottom: 1.6rem;
+    position: relative;
+  }
+
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin: 0 auto 1.6rem;
+    width: fit-content;
+    position: relative;
+  }
+  .divider::before, .divider::after {
+    content: '';
+    width: 60px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold));
+  }
+  .divider::after { background: linear-gradient(90deg, var(--gold), transparent); }
+  .divider-diamond {
+    width: 6px; height: 6px;
+    background: var(--gold);
+    transform: rotate(45deg);
+  }
+
+  .person-name {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: #fff;
+    margin-bottom: 0.4rem;
+    position: relative;
+  }
+
+  .person-title {
+    font-size: 0.75rem;
+    color: var(--gray);
+    letter-spacing: 2px;
+    position: relative;
+  }
+
+  /* 링크 섹션 */
+  .card-body {
+    padding: 1.8rem 2rem;
+    background: #fff;
+  }
+
+  .contact-section {
+    margin-bottom: 1.4rem;
+  }
+
+  .section-label {
+    font-size: 0.62rem;
+    letter-spacing: 3px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 0.7rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--cream2);
+  }
+
+  .link-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem 0.8rem;
+    text-decoration: none;
+    color: var(--dark);
+    border-radius: 2px;
+    transition: all 0.2s ease;
+    margin-bottom: 0.3rem;
+    border: 1px solid transparent;
+  }
+
+  .link-item:hover {
+    background: var(--cream);
+    border-color: var(--gold-light);
+  }
+
+  .link-icon {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    border: 1px solid var(--gold-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background: var(--cream);
+    transition: all 0.2s;
+  }
+
+  .link-item:hover .link-icon {
+    background: var(--gold);
+    border-color: var(--gold);
+  }
+
+  .link-icon svg {
+    width: 16px; height: 16px;
+    fill: var(--gold);
+    transition: fill 0.2s;
+  }
+  .link-item:hover .link-icon svg { fill: #fff; }
+
+  .link-info { flex: 1; min-width: 0; }
+  .link-label {
+    font-size: 0.65rem;
+    color: var(--gray);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 0.15rem;
+  }
+  .link-value {
+    font-size: 0.88rem;
+    font-weight: 400;
+    color: var(--dark);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .link-arrow {
+    color: var(--gold-light);
+    font-size: 0.8rem;
+    flex-shrink: 0;
+  }
+
+  /* 저장 버튼 */
+  .save-btn {
+    display: block;
+    width: 100%;
+    padding: 1rem;
+    background: var(--dark);
+    color: var(--gold);
+    text-align: center;
+    text-decoration: none;
+    font-family: 'Noto Serif KR', serif;
+    font-size: 0.8rem;
+    letter-spacing: 3px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+    margin-top: 1rem;
+  }
+
+  .save-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(201,169,110,0.1), transparent);
+    transform: translateX(-100%);
+    transition: transform 0.5s;
+  }
+  .save-btn:hover::before { transform: translateX(100%); }
+  .save-btn:hover { background: #1a1614; }
+
+  /* 푸터 */
+  .card-footer {
+    padding: 1rem 2rem 1.4rem;
+    text-align: center;
+    border-top: 1px solid var(--cream2);
+  }
+
+  .footer-brand {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.8rem;
+    color: var(--gold);
+    letter-spacing: 2px;
+  }
+
+  .footer-copy {
+    font-size: 0.6rem;
+    color: var(--gray);
+    margin-top: 0.3rem;
+    letter-spacing: 1px;
+  }
+
+  /* 토스트 */
+  .toast {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--dark);
+    color: var(--gold);
+    padding: 0.7rem 1.5rem;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    opacity: 0;
+    transition: all 0.3s;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <!-- 헤더 -->
+  <div class="card-header">
+    <div class="deco deco-1"></div>
+    <div class="deco deco-2"></div>
+    <div class="brand-name">LaVella</div>
+    <div class="brand-sub">Wedding Photography</div>
+    <div class="divider"><div class="divider-diamond"></div></div>
+    <div class="person-name">임준혁</div>
+    <div class="person-title">WEDDING PHOTOGRAPHER</div>
+  </div>
+
+  <!-- 바디 -->
+  <div class="card-body">
+
+    <!-- 연락처 -->
+    <div class="contact-section">
+      <div class="section-label">Contact</div>
+
+      <a href="tel:010-3083-0803" class="link-item">
+        <div class="link-icon">
+          <svg viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg>
+        </div>
+        <div class="link-info">
+          <div class="link-label">Phone</div>
+          <div class="link-value">010-3083-0803</div>
+        </div>
+        <div class="link-arrow">›</div>
+      </a>
+
+      <a href="mailto:imjunphoto@naver.com" class="link-item">
+        <div class="link-icon">
+          <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+        </div>
+        <div class="link-info">
+          <div class="link-label">Email</div>
+          <div class="link-value">imjunphoto@naver.com</div>
+        </div>
+        <div class="link-arrow">›</div>
+      </a>
+    </div>
+
+    <!-- 채널 -->
+    <div class="contact-section">
+      <div class="section-label">Channel</div>
+
+      <a href="http://pf.kakao.com/_XxeMZX/chat" target="_blank" class="link-item">
+        <div class="link-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 3C6.48 3 2 6.69 2 11.25c0 2.9 1.82 5.45 4.58 6.97-.18.65-.67 2.38-.77 2.75-.12.46.17.46.36.33.15-.1 2.37-1.61 3.33-2.26.81.12 1.64.19 2.5.19 5.52 0 10-3.69 10-8.25S17.52 3 12 3z"/></svg>
+        </div>
+        <div class="link-info">
+          <div class="link-label">KakaoTalk</div>
+          <div class="link-value">lavellawedding</div>
+        </div>
+        <div class="link-arrow">›</div>
+      </a>
+
+      <a href="https://www.instagram.com/lavellawedding" target="_blank" class="link-item">
+        <div class="link-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+        </div>
+        <div class="link-info">
+          <div class="link-label">Instagram</div>
+          <div class="link-value">@lavellawedding</div>
+        </div>
+        <div class="link-arrow">›</div>
+      </a>
+
+      <a href="https://blog.naver.com/imjunphoto" target="_blank" class="link-item">
+        <div class="link-icon">
+          <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+        </div>
+        <div class="link-info">
+          <div class="link-label">Naver Blog</div>
+          <div class="link-value">imjunphoto</div>
+        </div>
+        <div class="link-arrow">›</div>
+      </a>
+
+      <a href="https://capturebyj.github.io/lavella-wedding/" target="_blank" class="link-item">
+        <div class="link-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+        </div>
+        <div class="link-info">
+          <div class="link-label">Website</div>
+          <div class="link-value">LaVella Wedding 홈페이지</div>
+        </div>
+        <div class="link-arrow">›</div>
+      </a>
+    </div>
+
+    <!-- 연락처 저장 버튼 -->
+    <button class="save-btn" onclick="copyPhone()">
+      📋 &nbsp; 전화번호 복사
+    </button>
+  </div>
+
+  <!-- 푸터 -->
+  <div class="card-footer">
+    <div class="footer-brand">LaVella Wedding</div>
+    <div class="footer-copy">본식 웨딩 촬영 전문</div>
+  </div>
+</div>
+
+<div class="toast" id="toast">전화번호가 복사되었습니다</div>
+
+<script>
+function copyPhone() {
+  navigator.clipboard.writeText('010-3083-0803').then(function() {
+    var t = document.getElementById('toast');
+    t.classList.add('show');
+    setTimeout(function(){ t.classList.remove('show'); }, 2000);
+  });
+}
+</script>
+</body>
+</html>
