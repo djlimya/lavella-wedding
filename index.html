@@ -1671,17 +1671,12 @@
     
         /* ── Portfolio Gallery ── */
         .portfolio-gallery {
-            display: columns;
             column-count: 3;
             column-gap: 12px;
             margin-top: 2rem;
         }
-        @media (max-width: 768px) {
-            .portfolio-gallery { column-count: 2; }
-        }
-        @media (max-width: 480px) {
-            .portfolio-gallery { column-count: 1; }
-        }
+        @media (max-width: 768px) { .portfolio-gallery { column-count: 2; } }
+        @media (max-width: 480px) { .portfolio-gallery { column-count: 1; } }
         .portfolio-gallery .gal-item {
             break-inside: avoid;
             margin-bottom: 12px;
@@ -1695,13 +1690,8 @@
             display: block;
             transition: transform 0.4s ease;
         }
-        .portfolio-gallery .gal-item:hover img {
-            transform: scale(1.03);
-        }
-        .portfolio-more {
-            text-align: center;
-            margin-top: 2.5rem;
-        }
+        .portfolio-gallery .gal-item:hover img { transform: scale(1.03); }
+        .portfolio-more { text-align: center; margin-top: 2.5rem; }
         .portfolio-more button {
             background: transparent;
             border: 1px solid var(--gold, #C9A96E);
@@ -1712,59 +1702,30 @@
             cursor: pointer;
             transition: all 0.3s;
         }
-        .portfolio-more button:hover {
-            background: var(--gold, #C9A96E);
-            color: #fff;
-        }
+        .portfolio-more button:hover { background: var(--gold, #C9A96E); color: #fff; }
         /* ── Lightbox ── */
         .lb-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.92);
-            z-index: 9999;
-            align-items: center;
-            justify-content: center;
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,0.92); z-index: 9999;
+            align-items: center; justify-content: center;
         }
         .lb-overlay.active { display: flex; }
-        .lb-overlay img {
-            max-width: 90vw;
-            max-height: 90vh;
-            object-fit: contain;
-            border: 1px solid rgba(201,169,110,0.3);
-        }
+        .lb-overlay img { max-width: 90vw; max-height: 90vh; object-fit: contain; }
         .lb-close {
-            position: absolute;
-            top: 1.5rem; right: 1.5rem;
-            color: #fff;
-            font-size: 2rem;
-            cursor: pointer;
-            line-height: 1;
-            opacity: 0.8;
+            position: absolute; top: 1.5rem; right: 1.5rem;
+            color: #fff; font-size: 2rem; cursor: pointer; opacity: 0.8;
         }
         .lb-close:hover { opacity: 1; }
         .lb-prev, .lb-next {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #fff;
-            font-size: 2.5rem;
-            cursor: pointer;
-            opacity: 0.7;
-            user-select: none;
-            padding: 0 1.2rem;
+            position: absolute; top: 50%; transform: translateY(-50%);
+            color: #fff; font-size: 2.5rem; cursor: pointer;
+            opacity: 0.7; user-select: none; padding: 0 1.2rem;
         }
         .lb-prev:hover, .lb-next:hover { opacity: 1; }
-        .lb-prev { left: 1rem; }
-        .lb-next { right: 1rem; }
+        .lb-prev { left: 1rem; } .lb-next { right: 1rem; }
         .lb-counter {
-            position: absolute;
-            bottom: 1.5rem;
-            left: 50%;
-            transform: translateX(-50%);
-            color: rgba(255,255,255,0.6);
-            font-size: 0.85rem;
-            letter-spacing: 0.1em;
+            position: absolute; bottom: 1.5rem; left: 50%; transform: translateX(-50%);
+            color: rgba(255,255,255,0.6); font-size: 0.85rem; letter-spacing: 0.1em;
         }
 </style>
 </head>
@@ -1856,40 +1817,40 @@
 
             <div class="portfolio-gallery">
                 <div class="gal-item" data-index="0">
-                    <img src="https://capturebyj.github.io/lavella-wedding/%EC%8B%A0%EB%B6%80%EB%8C%80%EA%B8%B0%EC%8B%A41.png" alt="LaVella 웨딩 포트폴리오" loading="lazy">
+                    <img src="https://capturebyj.github.io/lavella-wedding/brideroom1.png" alt="LaVella 웨딩 포트폴리오" loading="lazy">
                 </div>
                 <div class="gal-item" data-index="1">
-                    <img src="https://capturebyj.github.io/lavella-wedding/%EB%A1%AF%EB%8D%B0%ED%98%B8%ED%85%941.jpg" alt="LaVella 웨딩 포트폴리오" loading="lazy">
+                    <img src="https://capturebyj.github.io/lavella-wedding/hotel1.jpg" alt="LaVella 웨딩 포트폴리오" loading="lazy">
                 </div>
                 <div class="gal-item" data-index="2">
-                    <img src="https://capturebyj.github.io/lavella-wedding/%ED%94%BC%EB%82%A0%EB%A0%88.jpg" alt="LaVella 웨딩 포트폴리오" loading="lazy">
+                    <img src="https://capturebyj.github.io/lavella-wedding/final1.jpg" alt="LaVella 웨딩 포트폴리오" loading="lazy">
                 </div>
                 <div class="gal-item" data-index="3">
-                    <img src="https://capturebyj.github.io/lavella-wedding/%EC%8B%A0%EB%B6%80%EB%8C%80%EA%B8%B0%EC%8B%A42.png" alt="LaVella 웨딩 포트폴리오" loading="lazy">
+                    <img src="https://capturebyj.github.io/lavella-wedding/brideroom2.png" alt="LaVella 웨딩 포트폴리오" loading="lazy">
                 </div>
                 <div class="gal-item" data-index="4">
-                    <img src="https://capturebyj.github.io/lavella-wedding/%EB%B3%B8%EC%8B%9D1.png" alt="LaVella 웨딩 포트폴리오" loading="lazy">
+                    <img src="https://capturebyj.github.io/lavella-wedding/main1.png" alt="LaVella 웨딩 포트폴리오" loading="lazy">
                 </div>
                 <div class="gal-item" data-index="5">
-                    <img src="https://capturebyj.github.io/lavella-wedding/%ED%94%BC%EB%82%A0%EB%A0%882.png" alt="LaVella 웨딩 포트폴리오" loading="lazy">
+                    <img src="https://capturebyj.github.io/lavella-wedding/final2.png" alt="LaVella 웨딩 포트폴리오" loading="lazy">
                 </div>
                 <div class="gal-item" data-index="6">
-                    <img src="https://capturebyj.github.io/lavella-wedding/%EC%8B%A0%EB%B6%80%EB%8C%80%EA%B8%B0%EC%8B%A43.png" alt="LaVella 웨딩 포트폴리오" loading="lazy">
+                    <img src="https://capturebyj.github.io/lavella-wedding/brideroom3.png" alt="LaVella 웨딩 포트폴리오" loading="lazy">
                 </div>
                 <div class="gal-item" data-index="7">
-                    <img src="https://capturebyj.github.io/lavella-wedding/%EB%A1%AF%EB%8D%B0%ED%98%B8%ED%85%942.jpg" alt="LaVella 웨딩 포트폴리오" loading="lazy">
+                    <img src="https://capturebyj.github.io/lavella-wedding/hotel2.jpg" alt="LaVella 웨딩 포트폴리오" loading="lazy">
                 </div>
                 <div class="gal-item" data-index="8">
-                    <img src="https://capturebyj.github.io/lavella-wedding/%ED%96%89%EC%A7%84%EC%82%AC%EC%A7%84.jpg" alt="LaVella 웨딩 포트폴리오" loading="lazy">
+                    <img src="https://capturebyj.github.io/lavella-wedding/main2.jpg" alt="LaVella 웨딩 포트폴리오" loading="lazy">
                 </div>
                 <div class="gal-item" data-index="9">
-                    <img src="https://capturebyj.github.io/lavella-wedding/%EB%A1%9C%EB%B9%84.png" alt="LaVella 웨딩 포트폴리오" loading="lazy">
+                    <img src="https://capturebyj.github.io/lavella-wedding/lobby.png" alt="LaVella 웨딩 포트폴리오" loading="lazy">
                 </div>
                 <div class="gal-item" data-index="10">
-                    <img src="https://capturebyj.github.io/lavella-wedding/%EB%A1%AF%EB%8D%B0%ED%98%B8%ED%85%943.jpg" alt="LaVella 웨딩 포트폴리오" loading="lazy">
+                    <img src="https://capturebyj.github.io/lavella-wedding/hotel3.jpg" alt="LaVella 웨딩 포트폴리오" loading="lazy">
                 </div>
                 <div class="gal-item" data-index="11">
-                    <img src="https://capturebyj.github.io/lavella-wedding/%ED%94%BC%EB%82%A0%EB%A0%883.jpg" alt="LaVella 웨딩 포트폴리오" loading="lazy">
+                    <img src="https://capturebyj.github.io/lavella-wedding/final3.jpg" alt="LaVella 웨딩 포트폴리오" loading="lazy">
                 </div>
             </div>
 
@@ -2040,10 +2001,21 @@
                         <p>24x36 inch 고급 액자 1개 추가</p>
                     </div>
                 </div>
-                <div class="option-note">
-                    <h4>💡 추가 보정 서비스</h4>
-                    <p>기본 보정 외 특별 보정을 원하시는 경우, 사진 1장당 10,000원에 진행 가능합니다.</p>
-                    <p>보정본 수령 후 추가 요청 시 별도 계좌 이체 확인 후 작업이 진행됩니다.</p>
+                <!-- 서브스냅 + 추가보정 행 -->
+                <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 16px; margin-top: 16px;">
+                    <div class="option-card" style="background: #f0f4f0; border: 1.5px solid #9ab49a;">
+                        <div class="option-header">
+                            <h4 style="color: #4a7a4a;">서브스냅 촬영</h4>
+                            <span class="option-price" style="color: #4a7a4a;">-100,000원</span>
+                        </div>
+                        <p style="font-size: 0.85rem;">에센셜 패키지 전용 할인 옵션</p>
+                        <small style="color: #4a7a4a; font-weight: 600;">※ 에센셜 상품에만 적용 · 원판 촬영 미진행</small>
+                    </div>
+                    <div class="option-note" style="margin: 0;">
+                        <h4>💡 추가 보정 서비스</h4>
+                        <p>기본 보정 외 특별 보정을 원하시는 경우, 사진 1장당 10,000원에 진행 가능합니다.</p>
+                        <p>보정본 수령 후 추가 요청 시 별도 계좌 이체 확인 후 작업이 진행됩니다.</p>
+                    </div>
                 </div>
             </div>
 
@@ -2171,6 +2143,19 @@
                         <div class="faq-answer">
                             <p>웨딩홀 계약 시 원판촬영 진행 옵션이 필수로 포함되어 있는 경우, 원활한 촬영 진행을 위해 웨딩홀 측과 사전 협의를 권장드립니다.<br><br>
                             웨딩홀 원판촬영 진행으로 인한 라벨라 패키지 상품의 가격 변동은 없습니다.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <span>Q. 서브스냅 촬영 옵션은 무엇인가요?</span>
+                            <span class="faq-icon">+</span>
+                        </div>
+                        <div class="faq-answer">
+                            <p><strong>서브스냅 촬영</strong>은 <strong>에센셜 패키지 전용 할인 옵션</strong>으로, 원판 촬영을 진행하지 않는 조건으로 <strong>100,000원이 할인</strong>됩니다.<br><br>
+                            서브스냅도 메인스냅과 동일하게 <strong>본식 신부대기실부터 원판 촬영 종료 시점까지</strong> 동일하게 진행되며, 라벨라 소속 메인 작가가 직접 촬영합니다.<br><br>
+                            단, 본식 진행 시 <strong>고객께서 별도로 메인 작가(웨딩홀 전속 또는 외부)를 반드시 섭외</strong>하셔야 합니다. 원판 촬영 담당 메인 작가와 라벨라 서브스냅 작가가 함께 촬영을 진행하는 방식입니다.<br><br>
+                            ※ 클래식 및 프레스티지 패키지에는 서브스냅 옵션이 적용되지 않습니다.</p>
                         </div>
                     </div>
                 </div>
@@ -2362,6 +2347,10 @@
                         <div class="form-group">
                             <label>추가 옵션</label>
                             <div class="options-checkbox-group">
+                                <div class="option-checkbox-item" id="subSnapRow" style="display:none; background:#f0f4f0; border:1px solid #9ab49a; border-radius:6px; padding:8px 12px;">
+                                    <input type="checkbox" id="optionSubSnap" data-price="-100000">
+                                    <label for="optionSubSnap" style="color:#4a7a4a; font-weight:600;">서브스냅 촬영 (-100,000원) <span style="font-size:0.8rem; font-weight:400;">에센셜 전용 · 원판 촬영 미진행</span></label>
+                                </div>
                                 <div class="option-checkbox-item">
                                     <input type="checkbox" id="optionMakeup" data-price="150000">
                                     <label for="optionMakeup">메이크업 촬영 (+150,000원)</label>
@@ -3151,6 +3140,9 @@
 
             let optionsPrice = 0;
 
+            // 서브스냅: 에센셜 전용, -100,000원
+            if (document.getElementById('optionSubSnap').checked) optionsPrice -= 100000;
+
             if (document.getElementById('optionMakeup').checked) optionsPrice += 150000;
 
             const comboChecked = document.getElementById('optionCombo').checked;
@@ -3214,7 +3206,19 @@
             }
         }
 
-        document.getElementById('contractPackage').addEventListener('change', calculateTotal);
+        document.getElementById('contractPackage').addEventListener('change', function() {
+            calculateTotal();
+            var pkg = this.value;
+            var subSnapRow = document.getElementById('subSnapRow');
+            var subSnapChk = document.getElementById('optionSubSnap');
+            if (pkg === 'essentiel') {
+                subSnapRow.style.display = '';
+            } else {
+                subSnapRow.style.display = 'none';
+                subSnapChk.checked = false;
+                calculateTotal();
+            }
+        });
         document.getElementById('optionMakeup').addEventListener('change', calculateTotal);
         document.getElementById('optionPaebaek').addEventListener('change', function() { checkCombo(); calculateTotal(); });
         document.getElementById('optionReception').addEventListener('change', function() { checkCombo(); calculateTotal(); });
@@ -3596,7 +3600,7 @@
     </div>
     <script>
         (function() {
-            var lbUrls = ["https://capturebyj.github.io/lavella-wedding/%EC%8B%A0%EB%B6%80%EB%8C%80%EA%B8%B0%EC%8B%A41.png", "https://capturebyj.github.io/lavella-wedding/%EB%A1%AF%EB%8D%B0%ED%98%B8%ED%85%941.jpg", "https://capturebyj.github.io/lavella-wedding/%ED%94%BC%EB%82%A0%EB%A0%88.jpg", "https://capturebyj.github.io/lavella-wedding/%EC%8B%A0%EB%B6%80%EB%8C%80%EA%B8%B0%EC%8B%A42.png", "https://capturebyj.github.io/lavella-wedding/%EB%B3%B8%EC%8B%9D1.png", "https://capturebyj.github.io/lavella-wedding/%ED%94%BC%EB%82%A0%EB%A0%882.png", "https://capturebyj.github.io/lavella-wedding/%EC%8B%A0%EB%B6%80%EB%8C%80%EA%B8%B0%EC%8B%A43.png", "https://capturebyj.github.io/lavella-wedding/%EB%A1%AF%EB%8D%B0%ED%98%B8%ED%85%942.jpg", "https://capturebyj.github.io/lavella-wedding/%ED%96%89%EC%A7%84%EC%82%AC%EC%A7%84.jpg", "https://capturebyj.github.io/lavella-wedding/%EB%A1%9C%EB%B9%84.png", "https://capturebyj.github.io/lavella-wedding/%EB%A1%AF%EB%8D%B0%ED%98%B8%ED%85%943.jpg", "https://capturebyj.github.io/lavella-wedding/%ED%94%BC%EB%82%A0%EB%A0%883.jpg"];
+            var lbUrls = ["https://capturebyj.github.io/lavella-wedding/brideroom1.png", "https://capturebyj.github.io/lavella-wedding/hotel1.jpg", "https://capturebyj.github.io/lavella-wedding/final1.jpg", "https://capturebyj.github.io/lavella-wedding/brideroom2.png", "https://capturebyj.github.io/lavella-wedding/main1.png", "https://capturebyj.github.io/lavella-wedding/final2.png", "https://capturebyj.github.io/lavella-wedding/brideroom3.png", "https://capturebyj.github.io/lavella-wedding/hotel2.jpg", "https://capturebyj.github.io/lavella-wedding/main2.jpg", "https://capturebyj.github.io/lavella-wedding/lobby.png", "https://capturebyj.github.io/lavella-wedding/hotel3.jpg", "https://capturebyj.github.io/lavella-wedding/final3.jpg"];
             var lbIdx = 0;
             var overlay = document.getElementById("lbOverlay");
             var lbImg   = document.getElementById("lbImg");
@@ -3604,31 +3608,21 @@
             function lbShow(i) {
                 lbIdx = (i + lbUrls.length) % lbUrls.length;
                 lbImg.src = lbUrls[lbIdx];
-                lbCnt.textContent = (lbIdx + 1) + " / " + lbUrls.length;
+                lbCnt.textContent = (lbIdx+1) + " / " + lbUrls.length;
                 overlay.classList.add("active");
             }
             document.querySelectorAll(".gal-item").forEach(function(el) {
-                el.addEventListener("click", function() {
-                    lbShow(parseInt(this.dataset.index));
-                });
+                el.addEventListener("click", function() { lbShow(parseInt(this.dataset.index)); });
             });
-            document.getElementById("lbClose").addEventListener("click", function() {
-                overlay.classList.remove("active");
-            });
-            document.getElementById("lbPrev").addEventListener("click", function() {
-                lbShow(lbIdx - 1);
-            });
-            document.getElementById("lbNext").addEventListener("click", function() {
-                lbShow(lbIdx + 1);
-            });
-            overlay.addEventListener("click", function(e) {
-                if (e.target === overlay) overlay.classList.remove("active");
-            });
+            document.getElementById("lbClose").addEventListener("click", function() { overlay.classList.remove("active"); });
+            document.getElementById("lbPrev").addEventListener("click",  function() { lbShow(lbIdx-1); });
+            document.getElementById("lbNext").addEventListener("click",  function() { lbShow(lbIdx+1); });
+            overlay.addEventListener("click", function(e) { if(e.target===overlay) overlay.classList.remove("active"); });
             document.addEventListener("keydown", function(e) {
-                if (!overlay.classList.contains("active")) return;
-                if (e.key === "ArrowLeft")  lbShow(lbIdx - 1);
-                if (e.key === "ArrowRight") lbShow(lbIdx + 1);
-                if (e.key === "Escape") overlay.classList.remove("active");
+                if(!overlay.classList.contains("active")) return;
+                if(e.key==="ArrowLeft")  lbShow(lbIdx-1);
+                if(e.key==="ArrowRight") lbShow(lbIdx+1);
+                if(e.key==="Escape") overlay.classList.remove("active");
             });
         })();
     </script>
